@@ -23,16 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const participantsList =
           details.participants.length > 0
-            ? `<ul class="participants-list">${details.participants
-                .map(
-                  (email) => `
-                    <li class="participant-item">
-                      <span class="participant-email">${email}</span>
-                      <button type="button" class="delete-participant" data-activity="${name}" data-email="${email}" title="Unregister ${email}" aria-label="Unregister ${email}">&times;</button>
-                    </li>`
-                )
-                .join("")}</ul>`
-            : `<p class="no-participants">No participants yet</p>`;
+            ? '<ul class="participants-list"></ul>'
+            : '<p class="no-participants">No participants yet</p>';
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
@@ -44,6 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
             ${participantsList}
           </div>
         `;
+
+        const participantList = activityCard.querySelector(".participants-list");
+        if (participantList) {
+          details.participants.forEach((email) => {
+            const participantItem = document.createElement("li");
+            participantItem.className = "participant-item";
+
+            const participantEmail = document.createElement("span");
+            participantEmail.className = "participant-email";
+            participantEmail.textContent = email;
+            participantItem.appendChild(participantEmail);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "delete-participant";
+            deleteButton.dataset.activity = name;
+            deleteButton.dataset.email = email;
+            deleteButton.title = `Unregister ${email}`;
+            deleteButton.setAttribute("aria-label", `Unregister ${email}`);
+            deleteButton.textContent = "×";
+            participantItem.appendChild(deleteButton);
+
+            participantList.appendChild(participantItem);
+          });
+        }
 
         activitiesList.appendChild(activityCard);
 
